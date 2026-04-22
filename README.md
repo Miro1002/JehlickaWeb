@@ -1,49 +1,53 @@
-# JehlickaWeb
+﻿# JehlickaWeb
 
-A simple Node.js Express web application that provides basic HTTP endpoints.
+A simple Node.js Express web application that zobrazuje najbližšiu nemocnicu v okolí pomocou OpenStreetMap.
 
-## Features
+## Funkcie
 
-- Simple greeting endpoint (`/`)
-- Health check endpoint (`/health`)
-- Runs on configurable port (default: 3000)
+- Zobrazenie webového rozhrania na `/`
+- Automatické získanie polohy používateľa cez prehliadač
+- Vyhľadanie najbližšej nemocnice pomocou OpenStreetMap Overpass API
+- Zobrazenie názvu, adresy a vzdialenosti
+- Odkaz na otvorenie polohy v OpenStreetMap
 
-## Requirements
+## Požiadavky
 
-- Node.js (v14 or higher)
+- Node.js (v14 alebo novší)
 - npm
 
-## Installation
+## Inštalácia
 
-1. Clone the repository:
+1. Klonujte repozitár:
 ```bash
 git clone <repository-url>
 cd JehlickaWeb
 ```
 
-2. Install dependencies:
+2. Nainštalujte závislosti:
 ```bash
 npm install
 ```
 
-## Usage
+## Spustenie
 
-Start the application:
+Spustite aplikáciu:
 ```bash
 npm start
 ```
 
-The application will listen on `http://localhost:3000` (or the port specified in the `PORT` environment variable).
+Aplikácia bude dostupná na `http://localhost:3000` (alebo na porte nastavenom v premennej `PORT`).
 
-### Available Endpoints
+## Cesty
 
-- **GET `/`** - Returns a greeting message
-- **GET `/health`** - Returns health status in JSON format
+- **GET `/`** - Webové rozhranie, ktoré nájde najbližšiu nemocnicu
+- **GET `/health`** - Health check endpoint
+- **GET `/api/nearest-hospital?lat=<lat>&lon=<lon>`** - API endpoint na vyhľadanie najbližšej nemocnice
 
-## Environment Variables
+## Konfigurácia
 
-- `PORT` - The port on which the application will run (default: 3000)
+- `PORT` - port, na ktorom bude aplikácia bežať (predvolené: `3000`)
+- `MAX_RADIUS_METERS` - maximálny polomer vyhľadávania nemocníc v metroch (predvolené: `5000`)
 
-## License
+## Licencia
 
 MIT
