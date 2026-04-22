@@ -1,12 +1,26 @@
 ﻿const express = require("express");
 const https = require("https");
 const path = require("path");
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 
 const port = process.env.PORT || 3000;
 const maxRadiusMeters = Number(process.env.MAX_RADIUS_METERS || 5000);
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+
+const dbPath = path.join(__dirname, 'database.db');
+const db = new sqlite3.Database(dbPath);
+
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS help_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lat REAL,
+    lon REAL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
+});
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
@@ -36,6 +50,20 @@ app.get("/api/nearest-hospital", async (req, res) => {
     console.error(error);
     res.status(502).json({ error: "Chyba pri získavaní údajov z Overpass API." });
   }
+});
+
+app.post('/api/help-request', (req, res) => {
+  const { lat, lon } = req.body;
+  if (typeof lat !== 'number' || typeof lon !== 'number') {
+    return res.status(400).json({ error: 'lat and lon must be numbers' });
+  }
+  db.run('INSERT INTO help_requests (lat, lon) VALUES (?, ?)', [lat, lon], function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json({ id: this.lastID, message: 'Help request saved' });
+  });
 });
 
 app.listen(port, () => {

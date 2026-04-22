@@ -41,6 +41,22 @@ button:hover {
 .actions {
   margin-top: 16px;
 }
+.help-section {
+  margin-top: 24px;
+}
+.help-section input {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-right: 12px;
+}
+.help-section button {
+  background: #dc2626;
+}
+.help-section button:hover {
+  background: #b91c1c;
+}
 .address {
   margin: 0.5rem 0;
   color: #4b5563;

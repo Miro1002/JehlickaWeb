@@ -1,12 +1,26 @@
 const statusEl = document.getElementById("status");
 const resultEl = document.getElementById("result");
 const refreshButton = document.getElementById("refreshButton");
+const helpText = document.getElementById("helpText");
+const helpButton = document.getElementById("helpButton");
 
 async function fetchNearestHospital(lat, lon) {
   const response = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}`);
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: response.statusText }));
     throw new Error(error.error || response.statusText);
+  }
+  return response.json();
+}
+
+async function sendHelpRequest(lat, lon) {
+  const response = await fetch('/api/help-request', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lat, lon })
+  });
+  if (!response.ok) {
+    throw new Error('Failed to send help request');
   }
   return response.json();
 }
@@ -68,3 +82,33 @@ async function findNearestHospital() {
 
 refreshButton.addEventListener("click", findNearestHospital);
 findNearestHospital();
+
+helpButton.addEventListener("click", async () => {
+  if (!navigator.geolocation) {
+    showError("Prehliadač nepodporuje geolokáciu.");
+    return;
+  }
+
+  updateStatus("Získavam vašu polohu pre pomoc...");
+  resultEl.classList.add("hidden");
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      try {
+        const data = await sendHelpRequest(latitude, longitude);
+        updateStatus("Žiadosť o pomoc bola odoslaná.");
+      } catch (error) {
+        showError(error.message);
+      }
+    },
+    (error) => {
+      showError(error.message || "Získanie polohy zlyhalo.");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 0,
+    }
+  );
+});
