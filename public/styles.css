@@ -1,8 +1,18 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f7fb;
+  background: white;
   color: #1f2937;
+  padding-top: 200px;
+}
+.gradient-header {
+  height: 200px;
+  background: linear-gradient(to bottom, green, white);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
 }
 main {
   max-width: 680px;
