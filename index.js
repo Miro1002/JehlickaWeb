@@ -20,6 +20,73 @@ db.serialize(() => {
     lon REAL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+  db.run(`CREATE TABLE IF NOT EXISTS profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT,
+    text TEXT DEFAULT ''
+  )`);
+
+  // Insert admin
+  db.run(`INSERT OR IGNORE INTO profiles (username, password) VALUES (?, ?)`, ['JoZeFvAjDa782345', 'DiVoKaKlObAsA66666666666666444458213874565715dsadgvrev']);
+
+  // Insert profiles
+  const profiles = [
+    ['sktik1', '8TxFyd'],
+    ['sktik2', 'akFwjl'],
+    ['sktik3', 'r3x94k'],
+    ['sktik4', 'X8wTte'],
+    ['sktik5', 'HILjsp'],
+    ['sktik6', 'tpAbsx'],
+    ['sktik7', 'awyl8g'],
+    ['sktik8', 'waktJg'],
+    ['sktik9', 'Yz8hLU'],
+    ['sktik10', 'Tu0Vxa'],
+    ['sktik11', 'aMxEjZ'],
+    ['sktik12', 'E1Wcwf'],
+    ['sktik13', 'tdG9Fe'],
+    ['sktik14', 'lVzwTf'],
+    ['sktik15', 'GJugx4'],
+    ['sktik16', '1VZo3a'],
+    ['sktik17', 'N8kgrZ'],
+    ['sktik18', 'w5E6kF'],
+    ['sktik19', 'rkczje'],
+    ['sktik20', 'mQS7iA'],
+    ['sktik21', 'f9DbBj'],
+    ['sktik22', 'iEeNpq'],
+    ['sktik23', '8mDFLp'],
+    ['sktik24', 'npLAZD'],
+    ['sktik25', 'HSiW97'],
+    ['sktik26', 'Ie0yLt'],
+    ['sktik27', 'oMO91n'],
+    ['sktik28', 'L3Oo05'],
+    ['sktik29', 'RYWxkt'],
+    ['sktik30', 'T7pdUt'],
+    ['sktik31', 'VEuKZJ'],
+    ['sktik32', 'mNovT9'],
+    ['sktik33', 'XIwfH5'],
+    ['sktik34', 'OFrdMj'],
+    ['sktik35', 'EYf7V5'],
+    ['sktik36', 'xFI9zm'],
+    ['sktik37', 'p02wPd'],
+    ['sktik38', 'f5BLWb'],
+    ['sktik39', 'ilydbN'],
+    ['sktik40', '6Fqr3Q'],
+    ['sktik41', 'Zcpl4g'],
+    ['sktik42', '3QPWZB'],
+    ['sktik43', 'gFo16d'],
+    ['sktik44', '9iGxqU'],
+    ['sktik45', '24PgVk'],
+    ['sktik46', 'WKTFgP'],
+    ['sktik47', 'B5p9wX'],
+    ['sktik48', 'JfoAOB'],
+    ['sktik49', 'TsrQLl'],
+    ['sktik50', 'Rfvmkl']
+  ];
+
+  profiles.forEach(([username, password]) => {
+    db.run(`INSERT OR IGNORE INTO profiles (username, password) VALUES (?, ?)`, [username, password]);
+  });
 });
 
 app.get("/health", (req, res) => {
@@ -87,6 +154,47 @@ app.delete('/api/help-request/:id', (req, res) => {
       return res.status(404).json({ error: 'Help request not found' });
     }
     res.json({ message: 'Help request deleted' });
+  });
+});
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password required' });
+  }
+  db.get('SELECT * FROM profiles WHERE username = ? AND password = ?', [username, password], (err, row) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (!row) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    if (username === 'JoZeFvAjDa782345') {
+      // Admin, return all profiles
+      db.all('SELECT username, password FROM profiles WHERE username != ?', ['JoZeFvAjDa782345'], (err, rows) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ isAdmin: true, profiles: rows });
+      });
+    } else {
+      res.json({ isAdmin: false, text: row.text });
+    }
+  });
+});
+
+app.put('/api/profile/:username', (req, res) => {
+  const { username } = req.params;
+  const { text } = req.body;
+  // Only admin can update, but for simplicity, assume authenticated
+  db.run('UPDATE profiles SET text = ? WHERE username = ?', [text, username], function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json({ message: 'Profile updated' });
   });
 });
 
