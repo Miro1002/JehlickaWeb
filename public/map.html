@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa pomocných žiadostí</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { height: 600px; width: 100%; }
+    .marker-popup { max-width: 200px; }
+    .delete-btn { background: red; color: white; border: none; padding: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Mapa pomocných žiadostí</h1>
+    <p>Zobrazuje polohy, kde boli odoslané žiadosti o pomoc.</p>
+    <div id="map"></div>
+  </main>
+  <script src="map-app.js"></script>
+</body>
+</html>

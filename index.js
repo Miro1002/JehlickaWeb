@@ -66,6 +66,30 @@ app.post('/api/help-request', (req, res) => {
   });
 });
 
+app.get('/api/help-requests', (req, res) => {
+  db.all('SELECT id, lat, lon, timestamp FROM help_requests ORDER BY timestamp DESC', [], (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json({ helpRequests: rows });
+  });
+});
+
+app.delete('/api/help-request/:id', (req, res) => {
+  const id = req.params.id;
+  db.run('DELETE FROM help_requests WHERE id = ?', [id], function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Help request not found' });
+    }
+    res.json({ message: 'Help request deleted' });
+  });
+});
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
 });
