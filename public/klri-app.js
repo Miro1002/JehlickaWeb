@@ -52,7 +52,7 @@ function showAdminPanel(profiles) {
 }
 
 function showUserContent(text) {
-  contentEl.innerHTML = `<h2>Váš obsah</h2><p>${text || 'Žiadny text nie je nastavený.'}</p>`;
+  contentEl.innerHTML = `<h2>Robo Grigorov</h2><p>${text || 'Žiadny text nie je nastavený.'}</p>`;
   contentEl.style.display = 'block';
 }
 
