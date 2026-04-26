@@ -3,16 +3,20 @@ body {
   font-family: Arial, sans-serif;
   background: white;
   color: #1f2937;
-  padding-top: 200px;
 }
-.gradient-header {
-  height: 200px;
-  background: linear-gradient(to bottom, green, white);
+.scout-lily {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
+  top: 16px;
+  right: 16px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scout-lily svg {
+  width: 100%;
+  height: 100%;
 }
 main {
   max-width: 680px;
@@ -30,6 +34,37 @@ main {
   text-align: center;
   font-size: 1.2rem;
   margin-bottom: 20px;
+}
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+#loginForm input,
+#loginForm button {
+  width: 100%;
+  max-width: 320px;
+}
+#loginForm input {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+#loginForm button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#loginForm button:hover {
+  background: #1d4ed8;
 }
 h1 {
   font-size: 2rem;
